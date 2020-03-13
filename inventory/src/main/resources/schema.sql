@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS inventory;
+
+CREATE TABLE inventory (
+  id INT AUTO_INCREMENT  PRIMARY KEY,
+  item_id VARCHAR(250) NOT NULL,
+  quantity int NOT NULL
+);

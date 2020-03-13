@@ -45,10 +45,4 @@ public class KafkaConfiguration {
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
-
-    @KafkaListener(topics = "created-orders", groupId = "inventory-group-id")
-    public void listen(String message) throws IOException {
-        OrderCreatedEvent event = this.objectMapper.readValue(message, OrderCreatedEvent.class);
-        System.out.println(event);
-    }
 }
