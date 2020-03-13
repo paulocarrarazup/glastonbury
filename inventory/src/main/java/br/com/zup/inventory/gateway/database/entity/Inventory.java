@@ -3,8 +3,7 @@ package br.com.zup.inventory.gateway.database.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
@@ -12,8 +11,10 @@ import javax.persistence.Id;
 public class Inventory {
 
     @Id
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 
+    @Column(name = "item_id")
     private String itemId;
 
     private Integer quantity;
