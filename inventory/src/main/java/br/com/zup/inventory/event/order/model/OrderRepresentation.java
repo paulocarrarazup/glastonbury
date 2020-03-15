@@ -1,5 +1,6 @@
-package br.com.zup.inventory.event.model;
+package br.com.zup.inventory.event.order.model;
 
+import br.com.zup.inventory.enumeration.OrderStatus;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -12,4 +13,5 @@ public class OrderRepresentation {
     private String customerId;
     private BigDecimal amount;
     private Map<String, Integer> items;
+    private OrderStatus status;
 }

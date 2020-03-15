@@ -1,5 +1,6 @@
 package br.com.zup.inventory.gateway.database.entity;
 
+import br.com.zup.inventory.enumeration.InventoryStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

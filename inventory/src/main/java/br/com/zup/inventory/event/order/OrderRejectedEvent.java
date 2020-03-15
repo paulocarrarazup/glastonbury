@@ -1,6 +1,6 @@
-package br.com.zup.order.event;
+package br.com.zup.inventory.event.order;
 
-import br.com.zup.order.enumeration.OrderStatus;
+import br.com.zup.inventory.enumeration.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,11 +13,11 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderCreatedEvent {
+public class OrderRejectedEvent {
 
     private String orderId;
     private String customerId;
     private BigDecimal amount;
-    private Map<String,Integer> items;
+    private Map<String, Integer> items;
     private OrderStatus status;
 }

@@ -2,6 +2,7 @@ package br.com.zup.order.service.impl;
 
 import br.com.zup.order.controller.request.CreateOrderRequest;
 import br.com.zup.order.controller.response.OrderResponse;
+import br.com.zup.order.enumeration.OrderStatus;
 import br.com.zup.order.event.OrderCreatedEvent;
 import br.com.zup.order.repository.OrderRepository;
 import br.com.zup.order.service.OrderService;
@@ -30,12 +31,13 @@ public class OrderServiceImpl implements OrderService {
     public String save(CreateOrderRequest request) {
         String orderId = this.orderRepository.save(request.toEntity()).getId();
 
-        OrderCreatedEvent event = new OrderCreatedEvent(
-                orderId,
-                request.getCustomerId(),
-                request.getAmount(),
-                createItemMap(request)
-        );
+        OrderCreatedEvent event = OrderCreatedEvent.builder()
+                .orderId(orderId)
+                .customerId(request.getCustomerId())
+                .amount(request.getAmount())
+                .status(OrderStatus.ORDER_CREATED)
+                .items(createItemMap(request))
+                .build();
 
         this.template.send("created-orders", event);
 

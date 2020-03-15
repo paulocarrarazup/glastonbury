@@ -1,7 +1,7 @@
 package br.com.zup.inventory.listener;
 
-import br.com.zup.inventory.event.OrderCreatedEvent;
-import br.com.zup.inventory.event.model.OrderRepresentation;
+import br.com.zup.inventory.event.order.OrderCreatedEvent;
+import br.com.zup.inventory.event.order.model.OrderRepresentation;
 import br.com.zup.inventory.service.InventoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;

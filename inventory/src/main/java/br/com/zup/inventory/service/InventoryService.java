@@ -1,6 +1,6 @@
 package br.com.zup.inventory.service;
 
-import br.com.zup.inventory.event.model.OrderRepresentation;
+import br.com.zup.inventory.event.order.model.OrderRepresentation;
 
 public interface InventoryService {
 
