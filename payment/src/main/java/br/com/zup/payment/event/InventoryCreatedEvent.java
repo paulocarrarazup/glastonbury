@@ -1,6 +1,6 @@
-package br.com.zup.inventory.event.payment;
+package br.com.zup.payment.event;
 
-import br.com.zup.inventory.enumeration.OrderStatus;
+import br.com.zup.payment.enumeration.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaymentCreateEvent {
+public class InventoryCreatedEvent {
 
     private String orderId;
     private String customerId;

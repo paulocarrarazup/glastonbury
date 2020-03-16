@@ -1,9 +1,9 @@
 package br.com.zup.inventory.service.impl;
 
 import br.com.zup.inventory.enumeration.OrderStatus;
-import br.com.zup.inventory.event.order.PublishOrderEvent;
+import br.com.zup.inventory.event.inventory.publisher.InventoryCreatedEventPublisher;
+import br.com.zup.inventory.event.inventory.publisher.InventoryRejectedEventPublisher;
 import br.com.zup.inventory.event.order.model.OrderRepresentation;
-import br.com.zup.inventory.event.payment.PublishPaymentEvent;
 import br.com.zup.inventory.exception.OrderRejectedException;
 import br.com.zup.inventory.gateway.database.entity.Inventory;
 import br.com.zup.inventory.gateway.database.repository.InventoryRepository;
@@ -17,13 +17,13 @@ import java.util.Optional;
 public class InventoryServiceImpl implements InventoryService {
 
     private InventoryRepository inventoryRepository;
-    private PublishPaymentEvent publishPaymentEvent;
-    private PublishOrderEvent publishOrderEvent;
+    private InventoryCreatedEventPublisher inventoryCreatedEventPublisher;
+    private InventoryRejectedEventPublisher inventoryRejectedEventPublisher;
 
-    public InventoryServiceImpl(InventoryRepository inventoryRepository, PublishPaymentEvent publishPaymentEvent, PublishOrderEvent publishOrderEvent) {
+    public InventoryServiceImpl(InventoryRepository inventoryRepository, InventoryCreatedEventPublisher inventoryCreatedEventPublisher, InventoryRejectedEventPublisher inventoryRejectedEventPublisher) {
         this.inventoryRepository = inventoryRepository;
-        this.publishPaymentEvent = publishPaymentEvent;
-        this.publishOrderEvent = publishOrderEvent;
+        this.inventoryCreatedEventPublisher = inventoryCreatedEventPublisher;
+        this.inventoryRejectedEventPublisher = inventoryRejectedEventPublisher;
     }
 
     @Override
@@ -52,11 +52,11 @@ public class InventoryServiceImpl implements InventoryService {
 
         } catch (final Exception ex) {
             orderRepresentation.setStatus(OrderStatus.ORDER_REJECTED);
-            publishOrderEvent.publish(orderRepresentation);
+            inventoryRejectedEventPublisher.publish(orderRepresentation);
             throw ex;
         }
 
         orderRepresentation.setStatus(OrderStatus.IN_PAYMENT);
-        publishPaymentEvent.publish(orderRepresentation);
+        inventoryCreatedEventPublisher.publish(orderRepresentation);
     }
 }

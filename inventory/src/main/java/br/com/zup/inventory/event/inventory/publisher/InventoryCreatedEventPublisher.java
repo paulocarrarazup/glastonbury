@@ -1,29 +1,28 @@
-package br.com.zup.inventory.event.payment;
+package br.com.zup.inventory.event.inventory.publisher;
 
-import br.com.zup.inventory.enumeration.OrderStatus;
+import br.com.zup.inventory.event.inventory.InventoryCreatedEvent;
 import br.com.zup.inventory.event.order.model.OrderRepresentation;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PublishPaymentEvent {
+public class InventoryCreatedEventPublisher {
 
-    private KafkaTemplate<String, PaymentCreateEvent> template;
+    private KafkaTemplate<String, InventoryCreatedEvent> template;
 
-    public PublishPaymentEvent(KafkaTemplate<String, PaymentCreateEvent> template) {
+    public InventoryCreatedEventPublisher(KafkaTemplate<String, InventoryCreatedEvent> template) {
         this.template = template;
     }
 
     public void publish(final OrderRepresentation orderRepresentation) {
 
-        PaymentCreateEvent event = PaymentCreateEvent.builder()
+        InventoryCreatedEvent event = InventoryCreatedEvent.builder()
                 .orderId(orderRepresentation.getOrderId())
                 .customerId(orderRepresentation.getCustomerId())
                 .amount(orderRepresentation.getAmount())
-                .status(OrderStatus.IN_PAYMENT)
                 .items(orderRepresentation.getItems())
                 .build();
 
-        this.template.send("order-in-payment", event);
+        this.template.send("inventory-created", event);
     }
 }

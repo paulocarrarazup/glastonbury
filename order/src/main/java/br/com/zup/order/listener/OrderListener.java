@@ -16,7 +16,7 @@ public class OrderListener {
         this.objectMapper = objectMapper;
     }
 
-    @KafkaListener(topics = "order-rejected", groupId = "order-group-id")
+    @KafkaListener(topics = "inventory-rejected", groupId = "order-group-id")
     public void listen(String message) throws IOException {
         OrderCreatedEvent event = this.objectMapper.readValue(message, OrderCreatedEvent.class);
 

@@ -1,8 +1,7 @@
 package br.com.zup.inventory.configuration;
 
-import br.com.zup.inventory.event.order.OrderRejectedEvent;
-import br.com.zup.inventory.event.payment.PaymentCreateEvent;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import br.com.zup.inventory.event.inventory.InventoryCreatedEvent;
+import br.com.zup.inventory.event.inventory.InventoryRejectedEvent;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -24,14 +23,8 @@ import java.util.Map;
 @Configuration
 public class KafkaConfiguration {
 
+    @Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrap;
-    private ObjectMapper objectMapper;
-
-    public KafkaConfiguration(@Value(value = "${spring.kafka.bootstrap-servers}") String bootstrap,
-                              ObjectMapper objectMapper) {
-        this.bootstrap = bootstrap;
-        this.objectMapper = objectMapper;
-    }
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
@@ -64,22 +57,22 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    public NewTopic paymentMessageTopic() {
-        return new NewTopic("order-in-payment", 1, (short) 1);
+    public NewTopic inventoryCreatedMessageTopic() {
+        return new NewTopic("inventory-created", 1, (short) 1);
     }
 
     @Bean
-    public NewTopic orderRejectedMessageTopic() {
-        return new NewTopic("order-rejected", 1, (short) 1);
+    public NewTopic inventoryRejectedMessageTopic() {
+        return new NewTopic("inventory-rejected", 1, (short) 1);
     }
 
     @Bean
-    public KafkaTemplate<String, PaymentCreateEvent> messagePaymentKafkaTemplate() {
-        return new KafkaTemplate<String, PaymentCreateEvent>(messageProducerFactory());
+    public KafkaTemplate<String, InventoryCreatedEvent> messagePaymentKafkaTemplate() {
+        return new KafkaTemplate<String, InventoryCreatedEvent>(messageProducerFactory());
     }
 
     @Bean
-    public KafkaTemplate<String, OrderRejectedEvent> messageOrderKafkaTemplate() {
-        return new KafkaTemplate<String, OrderRejectedEvent>(messageProducerFactory());
+    public KafkaTemplate<String, InventoryRejectedEvent> messageOrderKafkaTemplate() {
+        return new KafkaTemplate<String, InventoryRejectedEvent>(messageProducerFactory());
     }
 }

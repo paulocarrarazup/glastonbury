@@ -1,4 +1,4 @@
-package br.com.zup.inventory.event.order;
+package br.com.zup.inventory.event.inventory;
 
 import br.com.zup.inventory.enumeration.OrderStatus;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderRejectedEvent {
+public class InventoryRejectedEvent {
 
     private String orderId;
     private String customerId;
