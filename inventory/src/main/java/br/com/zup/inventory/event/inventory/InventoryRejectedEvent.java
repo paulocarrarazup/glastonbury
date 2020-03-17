@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Map;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +18,6 @@ public class InventoryRejectedEvent {
     private String orderId;
     private String customerId;
     private BigDecimal amount;
-    private Map<String, Integer> items;
+    private List<InventoryItemRejectedEvent> items;
     private OrderStatus status;
 }

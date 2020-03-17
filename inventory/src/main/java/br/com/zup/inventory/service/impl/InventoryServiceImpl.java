@@ -32,8 +32,8 @@ public class InventoryServiceImpl implements InventoryService {
 
         try {
 
-            orderRepresentation.getItems().forEach((itemKey, itemValue) -> {
-                final Optional<Inventory> item = this.inventoryRepository.findByItemId(itemKey);
+            orderRepresentation.getItems().forEach(itemRepresentation -> {
+                final Optional<Inventory> item = this.inventoryRepository.findByItemId(itemRepresentation.getId());
 
                 if(!item.isPresent()) {
                     throw new OrderRejectedException("Order Sold Out");
@@ -41,8 +41,8 @@ public class InventoryServiceImpl implements InventoryService {
 
                 final Inventory itemInventory = item.get();
 
-                if(itemValue <= itemInventory.getQuantity()) {
-                    itemInventory.setQuantity(itemInventory.getQuantity() - itemValue);
+                if(itemRepresentation.getQuantity() <= itemInventory.getQuantity()) {
+                    itemInventory.setQuantity(itemInventory.getQuantity() - itemRepresentation.getQuantity());
                     this.inventoryRepository.save(itemInventory);
                 } else {
                     throw new OrderRejectedException("Order Sold Out");

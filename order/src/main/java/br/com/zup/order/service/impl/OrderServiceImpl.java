@@ -3,13 +3,10 @@ package br.com.zup.order.service.impl;
 import br.com.zup.order.controller.response.OrderResponse;
 import br.com.zup.order.domain.CreateOrderDomain;
 import br.com.zup.order.domain.CreateOrderItemDomain;
-import br.com.zup.order.enumeration.OrderStatus;
-import br.com.zup.order.event.order.OrderCreatedEvent;
+import br.com.zup.order.event.order.publisher.OrderCreatedEventPublisher;
 import br.com.zup.order.repository.OrderRepository;
 import br.com.zup.order.service.OrderService;
 import br.com.zup.order.service.translator.CreateOrderDomainToOrderEntityTranslator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,27 +18,18 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
 
     private OrderRepository orderRepository;
-    private KafkaTemplate<String, OrderCreatedEvent> template;
+    private OrderCreatedEventPublisher orderCreatedEventPublisher;
 
-    @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, KafkaTemplate<String, OrderCreatedEvent> template) {
+    public OrderServiceImpl(OrderRepository orderRepository, OrderCreatedEventPublisher orderCreatedEventPublisher) {
         this.orderRepository = orderRepository;
-        this.template = template;
+        this.orderCreatedEventPublisher = orderCreatedEventPublisher;
     }
 
     @Override
     public String create(CreateOrderDomain createOrderDomain) {
         String orderId = save(createOrderDomain);
 
-        OrderCreatedEvent event = OrderCreatedEvent.builder()
-                .orderId(orderId)
-                .customerId(createOrderDomain.getCustomerId())
-                .amount(createOrderDomain.getAmount())
-                .status(OrderStatus.ORDER_CREATED)
-                .items(createItemMap(createOrderDomain))
-                .build();
-
-        this.template.send("created-orders", event);
+        orderCreatedEventPublisher.publish(createOrderDomain);
 
         return orderId;
     }
