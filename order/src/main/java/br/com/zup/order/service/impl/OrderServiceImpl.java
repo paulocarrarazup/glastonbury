@@ -1,11 +1,13 @@
 package br.com.zup.order.service.impl;
 
-import br.com.zup.order.controller.request.CreateOrderRequest;
 import br.com.zup.order.controller.response.OrderResponse;
+import br.com.zup.order.domain.CreateOrderDomain;
+import br.com.zup.order.domain.CreateOrderItemDomain;
 import br.com.zup.order.enumeration.OrderStatus;
-import br.com.zup.order.event.OrderCreatedEvent;
+import br.com.zup.order.event.order.OrderCreatedEvent;
 import br.com.zup.order.repository.OrderRepository;
 import br.com.zup.order.service.OrderService;
+import br.com.zup.order.service.translator.CreateOrderDomainToOrderEntityTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -28,15 +30,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public String save(CreateOrderRequest request) {
-        String orderId = this.orderRepository.save(request.toEntity()).getId();
+    public String create(CreateOrderDomain createOrderDomain) {
+        String orderId = save(createOrderDomain);
 
         OrderCreatedEvent event = OrderCreatedEvent.builder()
                 .orderId(orderId)
-                .customerId(request.getCustomerId())
-                .amount(request.getAmount())
+                .customerId(createOrderDomain.getCustomerId())
+                .amount(createOrderDomain.getAmount())
                 .status(OrderStatus.ORDER_CREATED)
-                .items(createItemMap(request))
+                .items(createItemMap(createOrderDomain))
                 .build();
 
         this.template.send("created-orders", event);
@@ -44,9 +46,14 @@ public class OrderServiceImpl implements OrderService {
         return orderId;
     }
 
-    private Map<String, Integer> createItemMap(CreateOrderRequest request) {
+    @Override
+    public String save(CreateOrderDomain createOrderDomain) {
+        return this.orderRepository.save(CreateOrderDomainToOrderEntityTranslator.translate(createOrderDomain)).getId();
+    }
+
+    private Map<String, Integer> createItemMap(CreateOrderDomain createOrderDomain) {
         Map<String, Integer> result = new HashMap<>();
-        for (CreateOrderRequest.OrderItemPart item : request.getItems()) {
+        for (CreateOrderItemDomain item : createOrderDomain.getItems()) {
             result.put(item.getId(), item.getQuantity());
         }
 

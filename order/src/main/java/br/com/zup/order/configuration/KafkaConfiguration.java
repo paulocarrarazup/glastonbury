@@ -1,6 +1,6 @@
 package br.com.zup.order.configuration;
 
-import br.com.zup.order.event.OrderCreatedEvent;
+import br.com.zup.order.event.order.OrderCreatedEvent;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;

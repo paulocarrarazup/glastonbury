@@ -1,4 +1,4 @@
-package br.com.zup.order.controller.request;
+package br.com.zup.order.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,15 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateOrderRequest {
+public class CreateOrderItemDomain {
 
-    private String customerId;
+    private String id;
+    private String name;
     private BigDecimal amount;
-    private List<CreateOrderItemRequest> items;
+    private Integer quantity;
 }

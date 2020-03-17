@@ -1,4 +1,4 @@
-package br.com.zup.order.event;
+package br.com.zup.order.domain;
 
 import br.com.zup.order.enumeration.OrderStatus;
 import lombok.AllArgsConstructor;
@@ -7,17 +7,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Map;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderCreatedEvent {
+public class CreateOrderDomain {
 
-    private String orderId;
+    private String id;
     private String customerId;
     private BigDecimal amount;
-    private Map<String,Integer> items;
     private OrderStatus status;
+    private List<CreateOrderItemDomain> items;
 }
